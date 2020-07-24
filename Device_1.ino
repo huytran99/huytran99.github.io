@@ -5,7 +5,7 @@
 #include "html.h"
 const char *ssid = "SMART_SW1";
 const char *password = "123456789";
-const char* mqtt_server = "192.168.0.105";   /// lấy ip bằng lệnh ifconfig
+const char* mqtt_server = "192.168.0.103";   /// lấy ip bằng lệnh ifconfig
 ESP8266WebServer sv(80); //Khoi tao server ở port 80
 const uint16_t mqtt_port = 1883;
 const int ledPin1 = 16;
@@ -28,27 +28,16 @@ int button2State = HIGH;
 
 
 void publishstate() {
-  if (led1State == 0) {
+  if (led1State == 1) {
     client.publish("State1_1", "0") ;
   }
   else client.publish("State1_1", "1");
 
-  if (led2State == 0) {
+  if (led2State == 1) {
     client.publish("State2_1", "0");
   }
   else client.publish("State2_1", "1");
 }
-//
-//void checkbuttonReset() {
-//  if (digitalRead(buttonReset) == LOW) {
-//    delay(10);
-//    if (digitalRead(buttonReset) == LOW) {
-//      if (buttonReset != LOW) {
-//        ESP.restart();
-//      }
-//    }
-//  }
-//}
 
 //-----------------------------------------------------------------------------
 void handleWebsite() {
@@ -189,13 +178,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
   if (!strcmp(topic, "LED1_1")) {
     if ((char)payload[0] == '1') {
       Serial.println("ON");
-      led1State = 1;
+      led1State = 0;//sửa chỗ này 
       digitalWrite(ledPin1, led1State); // LED có sẵn trên NodeMCU bật ở mức 0(LOW)
     }
     // Tắt LED1 nếu nhận được lệnh là 0
     if ((char)payload[0] == '0') {
       Serial.println("OFF");
-      led1State = 0;
+      led1State = 1;//sửa chỗ này 
       digitalWrite(ledPin1, led1State); // LED tắt ở mức 1(HIGH)
     }
   }
@@ -204,13 +193,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
   if (!strcmp(topic, "LED2_1")) {
     if ((char)payload[0] == '1') {
       Serial.println("ON");
-      led2State = 1;
+      led2State = 0;//sửa chỗ này 
       digitalWrite(ledPin2, led2State); // LED có sẵn trên NodeMCU bật ở mức 0(LOW)
     }
     // Tắt LED2 nếu nhận được lệnh là 0
     if ((char)payload[0] == '0') {
       Serial.println("OFF");
-      led2State = 0;
+      led2State = 1;//sửa chỗ này
       digitalWrite(ledPin2, led2State); // LED tắt ở mức 1(HIGH)
     }
   }
